@@ -1,0 +1,142 @@
+.tabs {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 260px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #56567e transparent;
+  z-index: 10;
+  margin-top: 100px;
+}
+
+.tabs::-webkit-scrollbar {
+  width: 6px;
+}
+.tabs::-webkit-scrollbar-thumb {
+  background-color: #56567e;
+  border-radius: 4px;
+}
+
+.tabWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #3c3c5c;
+}
+
+.tab {
+  flex-grow: 1;
+  background: #3c3c5c;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+  color: #bbb;
+  font-weight: 500;
+  text-align: left;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.tab:hover {
+  background-color: #56567e;
+  color: #fff;
+}
+
+.tab.active {
+  background: #56567e;
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.closeBtn {
+  background: #e55e5e;
+  border: none;
+  padding: 0 14px;
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  line-height: 1;
+  transition: background-color 0.3s ease;
+  height: 40px;
+}
+
+.closeBtn:hover {
+  background: #d94c4c;
+}
+
+.newTab {
+  background: #4ade80;
+  color: #0f172a;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 0 8px #4ade80aa;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.newTab:hover {
+  background-color: #22c55e;
+  box-shadow: 0 0 12px #22c55ecc;
+}
+.newChatCreation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.createBtn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.createBtn:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.createBtn:hover:not(:disabled) {
+  background-color: #388e3c;
+}
+
+.cancelBtn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background-color: #d32f2f;
+}

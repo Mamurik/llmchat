@@ -1,0 +1,33 @@
+.list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #121224;
+  border-radius: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #4ade80 transparent;
+}
+
+.list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+  background-color: #4ade80;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.empty {
+  color: #6b7280;
+  text-align: center;
+  margin-top: 20px;
+}

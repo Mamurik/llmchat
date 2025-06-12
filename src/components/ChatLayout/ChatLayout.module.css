@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  height: 90vh;
+  max-width: 1200px;
+  margin: 40px auto;
+  background-color: #1e1e2f;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  color: #eee;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: #2a2a40;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-right: 1px solid #3c3c5c;
+  overflow-y: auto;
+}
+
+.chatArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow: hidden;
+}

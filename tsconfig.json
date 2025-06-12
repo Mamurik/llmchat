@@ -1,35 +1,33 @@
 {
-	"compilerOptions": {
-		"target": "ES2020",
-		"module": "ESNext",
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
-		"jsx": "react-jsx",
-		"moduleResolution": "bundler",
-		"allowImportingTsExtensions": true,
-		"isolatedModules": true,
-		"moduleDetection": "force",
-		"noEmit": true,
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
 
-		"baseUrl": "src",
-		"paths": {
-			"@api/*": ["api/*"],
-			"@assets/*": ["assets/*"],
-			"@components/*": ["components/*"],
-			"@constants/*": ["constants/*"],
-			"@pages/*": ["pages/*"],
-			"@store/*": ["store/*"],
-			"@hooks/*": ["hooks/*"],
-			"@utils/*": ["utils/*"],
-			"@styles/*": ["styles/*"],
-			"@types": ["types/types.ts"]
-		},
+    "baseUrl": "src",
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
+      "@pages/*": ["pages/*"],
+      "@hooks/*": ["hooks/*"],
+      "@utils/*": ["utils/*"],
+      "@styles/*": ["styles/*"],
+      "@types": ["types/types.ts"]
+    },
 
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
-		"skipLibCheck": true
-	},
-	"include": ["src"],
-	"exclude": ["node_modules", "dist"]
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
