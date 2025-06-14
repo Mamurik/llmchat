@@ -1,6 +1,7 @@
 export interface LLMMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: 'system' | 'user' | 'assistant';
   content: string;
+  displayContent?: string;
   model?: string;
 }
 

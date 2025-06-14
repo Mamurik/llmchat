@@ -18,7 +18,13 @@ const MessageList: React.FC<Props> = ({ messages, refEnd }) => {
         </div>
       )}
       {messages.map((msg, i) => (
-        <MessageBubble key={i} message={msg} />
+        <MessageBubble
+          key={i}
+          message={{
+            ...msg,
+            content: msg.displayContent ?? msg.content,
+          }}
+        />
       ))}
       <div ref={refEnd} />
     </div>

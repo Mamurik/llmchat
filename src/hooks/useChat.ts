@@ -1,5 +1,5 @@
-// useChat.ts
 import { LLMMessage, LLMStreamChunk } from '@types';
+import { parseFile } from '@utils/parseFile';
 import { useEffect, useRef, useState } from 'react';
 
 const BASE_URL = 'http://127.0.0.1:1234/v1/';
@@ -9,62 +9,112 @@ export const useChat = (
   setMessages: React.Dispatch<React.SetStateAction<LLMMessage[]>>,
   selectedModel: string
 ) => {
+  /* ---------- state ---------- */
   const [inputMessage, setInputMessage] = useState('');
+
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const [parsedFileText, setParsedFileText] = useState<string | null>(null);
+  const [isFileParsing, setIsFileParsing] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  /* ---------- авто‑скролл вниз ---------- */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const filterAssistantResponse = (text: string) =>
-    text.replace(/<think>.*?<\/think>/gs, '').trim();
+  /* ---------- удаляем <think></think> из ответа модели -------- */
+  const stripThinkTags = (txt: string) =>
+    txt.replace(/<think>.*?<\/think>/gs, '').trim();
 
+  /* ---------- выбор файла ---------- */
+  const handleFileSelect = async (file: File | null) => {
+    setAttachedFile(file);
+    setParsedFileText(null);
+
+    if (!file) return;
+
+    setIsFileParsing(true);
+    try {
+      const text = await parseFile(file);
+      setParsedFileText(text);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Ошибка при разборе файла.');
+      setAttachedFile(null);
+    } finally {
+      setIsFileParsing(false);
+    }
+  };
+
+  /* ---------- отправка ---------- */
   const handleSendMessage = async () => {
-    if (inputMessage.trim() === '') return;
+    if (isFileParsing) return; // файл ещё парсится
+    if (!inputMessage.trim() && !attachedFile) return; // нечего отправлять
 
-    const userMessage: LLMMessage = {
-      role: 'user',
-      content: inputMessage.trim(),
-    };
-    setMessages((prev) => [...prev, userMessage]);
-    setInputMessage('');
     setIsLoading(true);
     setError(null);
 
     try {
-      const currentMessages = [...messages];
-      if (currentMessages.length === 0) {
-        currentMessages.unshift({
+      const ext = attachedFile
+        ? attachedFile.name.split('.').pop()?.toLowerCase()
+        : '';
+      const humanAttachment = attachedFile
+        ? `Файл: ${attachedFile.name} (${ext})`
+        : '';
+
+      const displayContent =
+        inputMessage.trim() + (humanAttachment ? `\n${humanAttachment}` : '');
+
+      let llmContent = inputMessage.trim();
+      if (parsedFileText && attachedFile) {
+        llmContent += `\n\n---\nСодержимое файла «${attachedFile.name}»:\n${parsedFileText}`;
+      }
+
+      const userMsg: LLMMessage = {
+        role: 'user',
+        content: llmContent,
+        displayContent,
+      };
+
+      const history = [...messages];
+      if (history.length === 0) {
+        history.unshift({
           role: 'system',
           content:
             'Вы — полезный ассистент. Отвечайте в Markdown. Будьте кратким и понятным.',
         });
       }
+      history.push(userMsg);
 
-      currentMessages.push(userMessage);
+      setMessages((prev) => [...prev, userMsg]);
+      setInputMessage('');
+      setAttachedFile(null);
+      setParsedFileText(null);
 
-      const response = await fetch(`${BASE_URL}chat/completions`, {
+      const resp = await fetch(`${BASE_URL}chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: selectedModel,
-          messages: currentMessages,
+          messages: history,
           temperature: 0.7,
           max_tokens: 2000,
           stream: true,
         }),
       });
 
-      if (!response.ok || !response.body) {
-        throw new Error(`Ошибка: ${response.status}`);
+      if (!resp.ok || !resp.body) {
+        throw new Error(`Ошибка: ${resp.status}`);
       }
 
-      const reader = response.body.getReader();
+      const reader = resp.body.getReader();
       const decoder = new TextDecoder('utf-8');
-      let fullResponse = '';
-      let assistantModel = 'Модель...';
+
+      let fullResp = '';
+      let assistantModel = 'assistant';
 
       setMessages((prev) => [
         ...prev,
@@ -76,42 +126,40 @@ export const useChat = (
         if (done) break;
 
         const chunk = decoder.decode(value);
-        const lines = chunk
-          .split('\n')
-          .filter((line) => line.startsWith('data: '));
+        const lines = chunk.split('\n').filter((l) => l.startsWith('data: '));
 
         for (const line of lines) {
-          const jsonString = line.substring(6);
-          if (jsonString.trim() === '[DONE]') break;
+          const json = line.slice(6);
+          if (json.trim() === '[DONE]') continue;
 
           try {
-            const parsed: LLMStreamChunk = JSON.parse(jsonString);
-            const delta = parsed.choices[0]?.delta?.content || '';
-            const model = parsed.model || assistantModel;
+            const part: LLMStreamChunk = JSON.parse(json);
+            const delta = part.choices[0]?.delta?.content ?? '';
+            const model = part.model ?? assistantModel;
 
-            fullResponse += delta;
+            fullResp += delta;
             assistantModel = model;
 
             setMessages((prev) => {
-              const updated = [...prev];
-              const last = updated[updated.length - 1];
+              const upd = [...prev];
+              const last = upd[upd.length - 1];
+
               if (last?.role === 'assistant') {
-                updated[updated.length - 1] = {
+                upd[upd.length - 1] = {
                   ...last,
-                  content: filterAssistantResponse(fullResponse),
+                  content: stripThinkTags(fullResp),
                   model: assistantModel,
                 };
               }
-              return updated;
+              return upd;
             });
-          } catch (err) {
-            console.warn('JSON parse error:', err);
+          } catch (e) {
+            console.warn('Ошибка парсинга JSON‑чанка', e);
           }
         }
       }
-    } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : 'Неизвестная ошибка при запросе.';
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Неизвестная ошибка.';
       setError(msg);
       setMessages((prev) => [
         ...prev,
@@ -122,12 +170,17 @@ export const useChat = (
     }
   };
 
+  /* ---------- наружу ---------- */
   return {
     messages,
     inputMessage,
-    setInputMessage,
+    attachedFile,
+    isFileParsing,
     isLoading,
     error,
+
+    setInputMessage,
+    handleFileSelect,
     handleSendMessage,
     handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) =>
       setInputMessage(e.target.value),
@@ -137,6 +190,7 @@ export const useChat = (
         handleSendMessage();
       }
     },
+
     messagesEndRef,
   };
 };
