@@ -1,27 +1,25 @@
 .wrapper {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  background-color: #1e1e2f;
-  border-radius: 12px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  flex-grow: 1;
-  min-width: 0;
-}
-
-.label {
-  font-weight: 600;
-  color: #94a3b8;
-  user-select: none;
-  white-space: nowrap;
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%; 
+  box-sizing: border-box;
 }
 
 .select {
-  flex-grow: 1;
-  min-width: 120px;
-  padding: 8px 14px;
+  width: 100%; 
+  max-width: 100%;
+  padding: 8px;
+  background-color: #1e1e2f;
+  color: white;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  outline: none;
+  font-size: 14px;
+  
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   border-radius: 24px;
   border: none;
   background-color: #2a2a40;
@@ -35,3 +33,12 @@
   outline: none;
   font-family: inherit;
 }
+.label {
+  font-weight: 600;
+  color: #94a3b8;
+  user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+

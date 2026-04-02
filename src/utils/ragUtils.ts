@@ -1,17 +1,11 @@
-// src/utils/ragUtils.ts
-
 export interface TextChunk {
   text: string;
   metadata: {
     source: string;
-    page?: number;
+    startIndex: number;
   };
-  embedding?: number[];
 }
 
-/**
- * Разбивает текст на смысловые куски (чанки) с перекрытием
- */
 export function chunkText(
   text: string,
   source: string,
@@ -19,18 +13,18 @@ export function chunkText(
   overlap = 200
 ): TextChunk[] {
   const chunks: TextChunk[] = [];
-  let start = 0;
+  let cur = 0;
 
-  while (start < text.length) {
-    const end = start + size;
-    const chunk = text.slice(start, end);
+  while (cur < text.length) {
+    const end = Math.min(cur + size, text.length);
     chunks.push({
-      text: chunk,
-      metadata: { source },
+      text: text.slice(cur, end),
+      metadata: { source, startIndex: cur },
     });
-    start += size - overlap;
+    // Сдвигаемся на , чтобы следующий чанк захватил часть предыдущего
+    cur += size - overlap;
+    if (end === text.length) break;
   }
-
   return chunks;
 }
 

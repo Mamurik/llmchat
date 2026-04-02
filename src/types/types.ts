@@ -26,3 +26,7 @@ export interface ChatSession {
   messages: LLMMessage[];
   model: string;
 }
+export interface ParsedPage {
+  text: string;
+  pageNumber: number;
+}

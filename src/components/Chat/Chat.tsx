@@ -12,6 +12,7 @@ interface Props {
   onUpdateMessages: (messages: LLMMessage[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   selectedModel: string;
+  models: string[]; // <-- Добавляем это
 }
 
 const Chat: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Chat: React.FC<Props> = ({
   onUpdateMessages,
   onLoadingChange,
   selectedModel,
+  models, // <-- Получаем из ChatLayout
 }) => {
   const [localMessages, setLocalMessages] =
     useState<LLMMessage[]>(initialMessages);
@@ -45,7 +47,9 @@ const Chat: React.FC<Props> = ({
       <MessageList messages={chat.messages} refEnd={chat.messagesEndRef} />
       {chat.isLoading && <p className={styles.loading}>AI думает...</p>}
       {chat.error && <p className={styles.error}>Ошибка: {chat.error}</p>}
-      <MessageInput {...chat} />
+
+      {/* Передаем все нужные пропсы в MessageInput */}
+      <MessageInput {...chat} models={models} selectedModel={selectedModel} />
     </div>
   );
 };

@@ -1,142 +1,102 @@
 .tabs {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 260px;
-  max-height: 90vh;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-right: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #56567e transparent;
-  z-index: 10;
-  margin-top: 100px;
+  padding: 20px; 
+  overflow-y: auto;
+  flex: 1;
 }
-
-.tabs::-webkit-scrollbar {
-  width: 6px;
-}
-.tabs::-webkit-scrollbar-thumb {
-  background-color: #56567e;
-  border-radius: 4px;
-}
-
 .tabWrapper {
   display: flex;
   align-items: center;
   width: 100%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   border-radius: 8px;
-  overflow: hidden;
-  background-color: #3c3c5c;
+  background-color: #2a2a40;
 }
 
 .tab {
-  flex-grow: 1;
-  background: #3c3c5c;
+  flex: 1;
+  background: transparent;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px 0 0 8px;
-  cursor: pointer;
-  color: #bbb;
-  font-weight: 500;
+  padding: 12px;
+  color: #94a3b8;
   text-align: left;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.tab:hover {
-  background-color: #56567e;
-  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tab.active {
-  background: #56567e;
-  font-weight: 700;
-  color: #a5b4fc;
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
 }
 
 .closeBtn {
-  background: #e55e5e;
+  background: transparent;
+  color: #64748b;
   border: none;
-  padding: 0 14px;
-  border-radius: 0 8px 8px 0;
+  padding: 0 12px;
   cursor: pointer;
-  color: white;
-  font-size: 20px;
-  line-height: 1;
-  transition: background-color 0.3s ease;
-  height: 40px;
+  font-size: 18px;
 }
 
 .closeBtn:hover {
-  background: #d94c4c;
+  color: #ef4444;
 }
 
 .newTab {
+  margin: 10px 20px 20px;
   background: #4ade80;
-  color: #0f172a;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
   border: none;
-  padding: 10px 16px;
-  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 0 8px #4ade80aa;
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease;
-  width: 100%;
-  text-align: center;
-  margin-top: 8px;
+  color: #0f172a;
 }
 
-.newTab:hover {
-  background-color: #22c55e;
-  box-shadow: 0 0 12px #22c55ecc;
-}
+
+
 .newChatCreation {
+  width: 100%; /* Занимает всю доступную ширину родителя */
+  box-sizing: border-box; /* Учитываем padding в ширине */
+  padding: 12px;
+  background: #2a2a40;
+  border-radius: 10px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  max-width: 100%;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #38415d;
+}
+
+
+.newChatCreation :global(.wrapper) {
+  width: 100%;
+  padding: 0;
+  background: transparent;
 }
 
 .createBtn {
-  background-color: #4caf50;
-  color: white;
+  background-color: #4ade80;
+  color: #0f172a;
   border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
-}
-
-.createBtn:disabled {
-  background-color: #a5d6a7;
-  cursor: not-allowed;
-}
-
-.createBtn:hover:not(:disabled) {
-  background-color: #388e3c;
 }
 
 .cancelBtn {
-  background-color: #f44336;
+  background-color: #ef4444;
   color: white;
   border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  padding: 8px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+  font-size: 12px;
 }
 
-.cancelBtn:hover {
-  background-color: #d32f2f;
-}
+.createBtn:hover { background-color: #22c55e; }
+.cancelBtn:hover { background-color: #dc2626; }

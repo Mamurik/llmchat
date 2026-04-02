@@ -1,30 +1,31 @@
 .container {
   display: flex;
-  height: 90vh;
-  max-width: 1200px;
-  margin: 40px auto;
-  background-color: #1e1e2f;
-  border-radius: 12px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  height: 100vh; 
+  width: 100vw;
+  background-color: #0f172a;
   color: #eee;
   overflow: hidden;
 }
 
 .sidebar {
-  width: 260px;
-  background-color: #2a2a40;
-  padding: 20px 12px;
+  /* Запрещаем расти и сжиматься, фиксируем базу на 280px */
+  flex: 0 0 280px; 
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  
+  background-color: #1e1e2f;
+  border-right: 1px solid #2d2d44;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  border-right: 1px solid #3c3c5c;
-  overflow-y: auto;
+  overflow: hidden; 
 }
 
 .chatArea {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  background-color: #0f172a;
   overflow: hidden;
+  position: relative;
 }

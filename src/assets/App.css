@@ -1,7 +1,38 @@
-/* App.css */
 
-html,
-#root {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; 
+  background-color: #0f172a;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.sidebar {
+  flex: 0 0 280px;
   background-color: #1e1e2f;
-  color: #eee;
+  border-right: 1px solid #2d2d44;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background-color: #0f172a;
 }

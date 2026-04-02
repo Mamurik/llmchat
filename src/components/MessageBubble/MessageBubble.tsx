@@ -36,4 +36,4 @@ const MessageBubble: React.FC<{ message: LLMMessage }> = ({ message }) => {
   );
 };
 
-export default MessageBubble;
+export default React.memo(MessageBubble);

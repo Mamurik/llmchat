@@ -1,5 +1,7 @@
 .wrapper {
-  max-width: 1200px;
+  height: 100%; /* Занимает всю chatArea */
+  width: 100%;
+  max-width: 1200px;  /* Ограничиваем только ширину текста для удобства */
   margin: 60px auto;
   padding: 20px;
   background-color: #1e1e2f;
