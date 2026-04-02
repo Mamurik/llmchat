@@ -19,7 +19,6 @@ const App: React.FC = () => {
         // игнорируем ошибку парсинга
       }
     }
-    // Если нет сохранённых чатов — дефолтный чат
     return [
       { id: 'chat-1', title: 'Чат 1', messages: [], model: DEFAULT_MODEL },
     ];

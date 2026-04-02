@@ -1,8 +1,3 @@
-// src/utils/parseFile.ts
-// ------------------------------------------------------------
-// Полный парсер: TXT | DOC|DOCX | XLS|XLSX | PDF
-// ------------------------------------------------------------
-
 import mammoth from 'mammoth';
 import {
   getDocument,
@@ -44,8 +39,6 @@ export async function parseFile(file: File): Promise<string> {
 
       return wb.SheetNames.map((name) => {
         const sheet = wb.Sheets[name];
-
-        /* header:1 → массивы (с сохранением пустых ячеек) */
         const rows = XLSX.utils.sheet_to_json<
           (string | number | boolean | null)[]
         >(sheet, { header: 1 });

@@ -40,7 +40,7 @@ const ChatLayout: React.FC<ChatLayoutProps & { models: string[] }> = ({
           models={models}
         />
       </aside>
-      <main className="chatArea">
+      <main className="chatArea" key={activeChatId}>
         <Chat
           chatId={activeChat.id}
           initialMessages={activeChat.messages}

@@ -3,6 +3,7 @@ export interface LLMMessage {
   content: string;
   displayContent?: string;
   model?: string;
+  sources?: string[];
 }
 
 export interface LLMStreamChunk {
