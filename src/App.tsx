@@ -1,26 +1,38 @@
 import ChatLayout from '@components/ChatLayout/ChatLayout';
 import { useModels } from '@hooks/useModels';
-import { ChatSession, LLMMessage } from '@types';
+import { ChatSession, LLMMessage, LLMSettings } from '@types';
+import { getUniqueChatTitle } from '@utils/getUniqueChatTitle';
 import React, { useEffect, useState } from 'react';
 
 const MAX_CHATS = 5;
 const DEFAULT_MODEL = 'qwen/qwen3-4b';
 const LOCAL_STORAGE_CHATS_KEY = 'chatApp_chats';
 const LOCAL_STORAGE_ACTIVE_CHAT_KEY = 'chatApp_activeChatId';
-
+const DEFAULT_SETTINGS: LLMSettings = {
+  temperature: 0.7,
+  topP: 1,
+  topK: 40,
+  systemPrompt: 'Ты — полезный ассистент. Отвечай кратко и по делу.',
+};
 const App: React.FC = () => {
-  // Сначала пытаемся загрузить из localStorage
   const [chats, setChats] = useState<ChatSession[]>(() => {
     const stored = localStorage.getItem(LOCAL_STORAGE_CHATS_KEY);
     if (stored) {
       try {
         return JSON.parse(stored) as ChatSession[];
       } catch {
-        // игнорируем ошибку парсинга
+        /* ... */
       }
     }
+    // ИСПРАВЛЕНО: Добавляем настройки для дефолтного чата
     return [
-      { id: 'chat-1', title: 'Чат 1', messages: [], model: DEFAULT_MODEL },
+      {
+        id: 'chat-1',
+        title: 'Чат 1',
+        messages: [],
+        model: DEFAULT_MODEL,
+        settings: DEFAULT_SETTINGS,
+      },
     ];
   });
 
@@ -41,23 +53,20 @@ const App: React.FC = () => {
     localStorage.setItem(LOCAL_STORAGE_ACTIVE_CHAT_KEY, activeChatId);
   }, [activeChatId]);
 
-  const handleNewChat = (model: string) => {
+  const handleNewChat = (model: string, customSettings?: LLMSettings) => {
     if (isLoading) return;
     if (chats.length >= MAX_CHATS) {
       alert('Можно создать не более 5 чатов.');
-      return;
-    }
-    if (!model) {
-      alert('Выберите модель.');
       return;
     }
 
     const id = `chat-${Date.now()}`;
     const newChat: ChatSession = {
       id,
-      title: `Чат ${chats.length + 1}`,
+      title: getUniqueChatTitle(chats),
       messages: [],
       model,
+      settings: customSettings || DEFAULT_SETTINGS, // Применяем настройки
     };
 
     setChats((prev) => [...prev, newChat]);

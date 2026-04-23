@@ -20,11 +20,19 @@ export interface LLMStreamChunk {
     finish_reason: string | null;
   }>;
 }
+export interface LLMSettings {
+  temperature: number;
+  topP: number;
+  topK: number;
+  systemPrompt: string;
+}
+
 export interface ChatSession {
   id: string;
   title: string;
   messages: LLMMessage[];
   model: string;
+  settings: LLMSettings;
 }
 export interface ParsedPage {
   text: string;

@@ -8,15 +8,17 @@ interface Props {
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSendMessage: (compareModel?: string) => void;
-  attachedFiles: File[]; // Теперь массив
+  attachedFiles: File[];
   isFileParsing: boolean;
   indexingProgress: number;
   handleFileSelect: (file: File | null) => void;
+  handleRemoveFile: (fileName: string) => void; // Добавлено
+  clearAllFiles: () => void; // Добавлено
   isLoading: boolean;
   ragStrategy: 'rag' | 'full' | 'none';
   setRagStrategy: (strategy: 'rag' | 'full' | 'none') => void;
-  models: string[]; // Список всех моделей
-  selectedModel: string; // Текущая активная модель
+  models: string[];
+  selectedModel: string;
 }
 
 const MessageInput: React.FC<Props> = ({
@@ -26,6 +28,8 @@ const MessageInput: React.FC<Props> = ({
   handleSendMessage,
   attachedFiles = [],
   isFileParsing,
+  handleRemoveFile,
+  clearAllFiles,
   indexingProgress,
   handleFileSelect,
   isLoading,
@@ -35,23 +39,16 @@ const MessageInput: React.FC<Props> = ({
   selectedModel,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Состояния для режима сравнения
   const [isCompareMode, setIsCompareMode] = useState(false);
   const [secondModel, setSecondModel] = useState('');
 
-  // Устанавливаем вторую модель по умолчанию (отличную от первой)
+  // Установка второй модели по умолчанию
   useEffect(() => {
     if (models.length > 1 && !secondModel) {
       const other = models.find((m) => m !== selectedModel);
       if (other) setSecondModel(other);
     }
   }, [models, selectedModel]);
-
-  const onClearFiles = () => {
-    handleFileSelect(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
 
   const handleSend = () => {
     if (isCompareMode && secondModel) {
@@ -65,37 +62,41 @@ const MessageInput: React.FC<Props> = ({
     <div className={styles.container}>
       {/* 1. ПАНЕЛЬ НАСТРОЕК (RAG + СРАВНЕНИЕ) */}
       <div className={styles.topControls}>
-        {attachedFiles.length > 0 && !isFileParsing && (
-          <div className={styles.strategyGroup}>
-            <span className={styles.label}>Метод:</span>
-            <button
-              className={`${styles.toggleBtn} ${ragStrategy === 'rag' ? styles.active : ''}`}
-              onClick={() => setRagStrategy('rag')}
-            >
-              🎯 RAG
-            </button>
-            <button
-              className={`${styles.toggleBtn} ${ragStrategy === 'full' ? styles.active : ''}`}
-              onClick={() => setRagStrategy('full')}
-            >
-              📄 Full
-            </button>
-          </div>
-        )}
+        <div className={styles.leftControls}>
+          {attachedFiles.length > 0 && !isFileParsing && (
+            <div className={styles.strategyGroup}>
+              <span className={styles.label}>Метод:</span>
+              <button
+                className={`${styles.toggleBtn} ${ragStrategy === 'rag' ? styles.active : ''}`}
+                onClick={() => setRagStrategy('rag')}
+              >
+                🎯 RAG
+              </button>
+              <button
+                className={`${styles.toggleBtn} ${ragStrategy === 'full' ? styles.active : ''}`}
+                onClick={() => setRagStrategy('full')}
+              >
+                📄 Full
+              </button>
+            </div>
+          )}
+        </div>
 
         <button
           className={`${styles.compareTrigger} ${isCompareMode ? styles.compareActive : ''}`}
           onClick={() => setIsCompareMode(!isCompareMode)}
           disabled={models.length < 2}
         >
-          {isCompareMode ? '⚖️ Режим сравнения ВКЛ' : '⚖️ Сравнить модели'}
+          {isCompareMode ? '⚖️ Сравнение ВКЛ' : '⚖️ Сравнить модели'}
         </button>
       </div>
 
-      {/* 2. ПАНЕЛЬ ВЫБОРА ВТОРОЙ МОДЕЛИ (Выпадает при сравнении) */}
+      {/* 2. ПАНЕЛЬ ВЫБОРА ВТОРОЙ МОДЕЛИ */}
       {isCompareMode && (
         <div className={styles.comparePanel}>
-          <span className={styles.panelLabel}>Вторая модель для анализа:</span>
+          <span className={styles.panelLabel}>
+            Вторая модель для сравнения:
+          </span>
           <ModelSelector
             models={models.filter((m) => m !== selectedModel)}
             selectedModel={secondModel}
@@ -111,7 +112,10 @@ const MessageInput: React.FC<Props> = ({
             id="file-upload"
             type="file"
             accept=".txt,.doc,.docx,.xls,.xlsx,.pdf"
-            onChange={(e) => handleFileSelect(e.target.files?.[0] ?? null)}
+            onChange={(e) => {
+              handleFileSelect(e.target.files?.[0] ?? null);
+              if (fileInputRef.current) fileInputRef.current.value = '';
+            }}
             disabled={isLoading || isFileParsing}
             className={styles.hiddenInput}
             ref={fileInputRef}
@@ -119,7 +123,7 @@ const MessageInput: React.FC<Props> = ({
           <label
             htmlFor="file-upload"
             className={styles.iconBtn}
-            title="Добавить документ"
+            title="Добавить файл"
           >
             📎
           </label>
@@ -133,22 +137,37 @@ const MessageInput: React.FC<Props> = ({
             onKeyDown={handleKeyPress}
             rows={1}
             placeholder={
-              isFileParsing
-                ? 'Индексация базы знаний...'
-                : 'Задайте вопрос по документам...'
+              isFileParsing ? 'Индексация базы знаний...' : 'Задайте вопрос...'
             }
             disabled={isLoading || isFileParsing}
           />
 
-          {/* Список загруженных файлов */}
+          {/* Список загруженных файлов в виде тегов */}
           {attachedFiles.length > 0 && (
             <div className={styles.fileList}>
               {attachedFiles.map((file, idx) => (
                 <div key={idx} className={styles.fileTag}>
-                  <span className={styles.fileName}>{file.name}</span>
+                  <span className={styles.fileName} title={file.name}>
+                    {file.name}
+                  </span>
+                  {!isFileParsing && (
+                    <button
+                      className={styles.removeFile}
+                      onClick={() => handleRemoveFile(file.name)}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               ))}
-              {isFileParsing ? (
+
+              {!isFileParsing && (
+                <button className={styles.clearAll} onClick={clearAllFiles}>
+                  Очистить всё
+                </button>
+              )}
+
+              {isFileParsing && (
                 <div className={styles.indexingBox}>
                   <div className={styles.progressBar}>
                     <div
@@ -160,10 +179,6 @@ const MessageInput: React.FC<Props> = ({
                     {indexingProgress}%
                   </span>
                 </div>
-              ) : (
-                <button className={styles.clearAll} onClick={onClearFiles}>
-                  Очистить всё
-                </button>
               )}
             </div>
           )}
@@ -178,13 +193,7 @@ const MessageInput: React.FC<Props> = ({
             (!inputMessage.trim() && attachedFiles.length === 0)
           }
         >
-          {isLoading ? (
-            <div className={styles.spinner} />
-          ) : isCompareMode ? (
-            'Отправить обоим'
-          ) : (
-            'Отправить'
-          )}
+          {isLoading ? <div className={styles.spinner} /> : 'Отправить'}
         </button>
       </div>
     </div>

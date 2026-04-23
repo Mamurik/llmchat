@@ -1,0 +1,54 @@
+.wrapper {
+    margin-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 8px;
+  }
+  
+  .toggle {
+    background: none;
+    border: none;
+    color: #4da6ff; /* Голубой цвет как у ссылок */
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 4px 0;
+    transition: color 0.2s;
+  }
+  
+  .toggle:hover {
+    color: #80bfff;
+    text-decoration: underline;
+  }
+  
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .item {
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid #4da6ff;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  
+  .sourceName {
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #ccc;
+    margin-bottom: 4px;
+  }
+  
+  .sourceText {
+    font-size: 0.8rem;
+    color: #eee;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }

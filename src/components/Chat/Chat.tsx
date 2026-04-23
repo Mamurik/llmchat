@@ -1,7 +1,7 @@
 import MessageInput from '@components/MessageInput/MessageInput';
 import MessageList from '@components/MessageList/MessageList';
 import { useChat } from '@hooks/useChat';
-import { LLMMessage } from '@types';
+import { LLMMessage, LLMSettings } from '@types';
 import React, { useEffect, useState } from 'react';
 
 import styles from './Chat.module.css';
@@ -12,7 +12,8 @@ interface Props {
   onUpdateMessages: (messages: LLMMessage[]) => void;
   onLoadingChange?: (loading: boolean) => void;
   selectedModel: string;
-  models: string[]; // <-- Добавляем это
+  models: string[];
+  settings: LLMSettings;
 }
 
 const Chat: React.FC<Props> = ({
@@ -21,7 +22,8 @@ const Chat: React.FC<Props> = ({
   onUpdateMessages,
   onLoadingChange,
   selectedModel,
-  models, // <-- Получаем из ChatLayout
+  models,
+  settings,
 }) => {
   const [localMessages, setLocalMessages] =
     useState<LLMMessage[]>(initialMessages);
@@ -34,7 +36,12 @@ const Chat: React.FC<Props> = ({
     onUpdateMessages(localMessages);
   }, [localMessages]);
 
-  const chat = useChat(localMessages, setLocalMessages, selectedModel);
+  const chat = useChat(
+    localMessages,
+    setLocalMessages,
+    selectedModel,
+    settings
+  );
 
   useEffect(() => {
     if (onLoadingChange) {

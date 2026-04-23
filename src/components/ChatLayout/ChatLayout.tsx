@@ -13,7 +13,7 @@ interface ChatLayoutProps {
   onLoadingChange?: (loading: boolean) => void;
   selectedModel: string;
   disabled?: boolean;
-  models: string[]; // <-- Убеждаемся, что это тут есть
+  models: string[];
 }
 
 const ChatLayout: React.FC<ChatLayoutProps> = ({
@@ -44,6 +44,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
       </aside>
       <main className="chatArea" key={activeChatId}>
         <Chat
+          settings={activeChat.settings}
           chatId={activeChat.id}
           initialMessages={activeChat.messages}
           onUpdateMessages={(messages) =>
@@ -51,7 +52,7 @@ const ChatLayout: React.FC<ChatLayoutProps> = ({
           }
           onLoadingChange={onLoadingChange}
           selectedModel={activeChat.model}
-          models={models} // <-- ПЕРЕДАЕМ В ЧАТ
+          models={models}
         />
       </main>
     </div>

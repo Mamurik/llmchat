@@ -1,45 +1,70 @@
 .tabs {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 20px; 
-  overflow-y: auto;
-  flex: 1;
+  height: 100%;
+  padding: 15px;
+  background-color: #1e1e2f;
 }
+
+.chatList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 .tabWrapper {
   display: flex;
-  align-items: center;
-  width: 100%;
-  border-radius: 8px;
   background-color: #2a2a40;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.tabWrapper:hover {
+  border-color: #4ade80;
 }
 
 .tab {
   flex: 1;
   background: transparent;
   border: none;
-  padding: 12px;
+  padding: 10px 12px;
   color: #94a3b8;
   text-align: left;
   cursor: pointer;
-  font-size: 14px;
-  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.tab.active {
-  color: #4ade80;
+.active {
   background: rgba(74, 222, 128, 0.1);
+}
+
+.active .chatTitle {
+  color: #4ade80;
+}
+
+.chatTitle {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.modelName {
+  font-size: 11px;
+  opacity: 0.6;
 }
 
 .closeBtn {
   background: transparent;
-  color: #64748b;
   border: none;
-  padding: 0 12px;
-  cursor: pointer;
+  color: #64748b;
   font-size: 18px;
+  padding: 0 10px;
+  cursor: pointer;
 }
 
 .closeBtn:hover {
@@ -47,56 +72,126 @@
 }
 
 .newTab {
-  margin: 10px 20px 20px;
   background: #4ade80;
-  padding: 12px;
-  border-radius: 10px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
   color: #0f172a;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
+.newTab:hover {
+  transform: translateY(-2px);
+  background: #22c55e;
+}
 
-
+/* ФОРМА НАСТРОЕК */
 .newChatCreation {
-  width: 100%; /* Занимает всю доступную ширину родителя */
-  box-sizing: border-box; /* Учитываем padding в ширине */
-  padding: 12px;
-  background: #2a2a40;
-  border-radius: 10px;
+  background: #16213e;
+  border: 1px solid #38415d;
+  padding: 15px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid #38415d;
+  gap: 12px;
+  animation: slideIn 0.3s ease;
 }
 
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
 
-.newChatCreation :global(.wrapper) {
+.configTitle {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #4ade80;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.settingsGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #1e1e2f;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.field label {
+  font-size: 11px;
+  color: #64748b;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.systemTextarea {
   width: 100%;
-  padding: 0;
-  background: transparent;
+  height: 60px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: white;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 12px;
+  resize: none;
+  outline: none;
+}
+
+.sliderBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sliderLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.val {
+  color: #4ade80;
+  font-weight: bold;
+}
+
+.sliderBox input[type="range"] {
+  accent-color: #4ade80;
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .createBtn {
-  background-color: #4ade80;
+  background: #4ade80;
   color: #0f172a;
   border: none;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
 }
 
 .cancelBtn {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid #f87171;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 11px;
   cursor: pointer;
-  font-size: 12px;
 }
 
-.createBtn:hover { background-color: #22c55e; }
-.cancelBtn:hover { background-color: #dc2626; }
+.newChatCreation :global(.wrapper) {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
